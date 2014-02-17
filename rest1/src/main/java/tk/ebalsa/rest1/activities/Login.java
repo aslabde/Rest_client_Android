@@ -3,6 +3,7 @@ package tk.ebalsa.rest1.activities;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
+import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -58,8 +59,11 @@ public class Login extends ActionBarActivity {
         String pass = passField.getText().toString();
 
         if (!validate(name, pass)){
-            Toast.makeText(getApplicationContext(), "Complete ambos campos"
-                    , Toast.LENGTH_LONG).show();
+            Toast toast = new Toast(getApplicationContext());
+            toast.setGravity(Gravity.CENTER_VERTICAL, 0, 0);
+            toast.setDuration(Toast.LENGTH_LONG);
+            toast.setText("Complete ambos campos");
+
         }
 
         else {
@@ -81,20 +85,29 @@ public class Login extends ActionBarActivity {
                    this.finish();
                 }
                 else{ //(Login error)
-
-                   Toast.makeText(getApplicationContext(), "error en el login" , Toast.LENGTH_LONG).show();
+                    Toast toast = new Toast(getApplicationContext());
+                    toast.setGravity(Gravity.CENTER_VERTICAL, 0, 0);
+                    toast.setDuration(Toast.LENGTH_LONG);
+                    toast.setText("Error en la identificacion Usuario/Contraseña");
                 }
             }
             catch (TimeoutException t){
-                Toast.makeText(getApplicationContext(), "timeout" , Toast.LENGTH_LONG).show();
+                Toast toast = new Toast(getApplicationContext());
+                toast.setGravity(Gravity.CENTER_VERTICAL, 0, 0);
+                toast.setDuration(Toast.LENGTH_LONG);
+                toast.setText("Vaya...algo ha fallado. Por favor intentalo más tarde de nuevo");
             }
             catch (ExecutionException e){
-                Toast.makeText(getApplicationContext(), "Vaya, algo ha fallado....inténtalo mas tarde"
-                        , Toast.LENGTH_LONG).show();
+                Toast toast = new Toast(getApplicationContext());
+                toast.setGravity(Gravity.CENTER_VERTICAL, 0, 0);
+                toast.setDuration(Toast.LENGTH_LONG);
+                toast.setText("Vaya...algo ha fallado. Por favor intentalo más tarde de nuevo");
             }
             catch (Exception e){
-                Toast.makeText(getApplicationContext(), "Vaya, algo ha fallado....inténtalo mas tarde"
-                        , Toast.LENGTH_LONG).show();
+                Toast toast = new Toast(getApplicationContext());
+                toast.setGravity(Gravity.CENTER_VERTICAL, 0, 0);
+                toast.setDuration(Toast.LENGTH_LONG);
+                toast.setText("Vaya...algo ha fallado. Por favor intentalo más tarde de nuevo");
             }
         }
     }
