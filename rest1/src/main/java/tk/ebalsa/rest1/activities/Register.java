@@ -7,9 +7,14 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.Toast;
+
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeoutException;
 
 import tk.ebalsa.rest1.R;
 import tk.ebalsa.rest1.bo.UserBo;
+import tk.ebalsa.rest1.model.MyReturn;
 import tk.ebalsa.rest1.model.User;
 
 /**
@@ -49,7 +54,7 @@ public class Register extends ActionBarActivity {
     protected  boolean validate(String name, String pass, String pass2){
 
 
-        if(name.length()==0 || pass.length()==0 || pass2.length()==0){
+        if(name.matches("") || pass.matches("") || pass2.matches("")){
 
             return false;
         }
@@ -61,7 +66,7 @@ public class Register extends ActionBarActivity {
 
 
     //Parses user fields and tries to register bew user in system.
-    public void newUser(View view){
+    public void newUser(View view) throws InterruptedException {
         EditText userField = (EditText)this.findViewById(R.id.user_name_value);
         EditText passField = (EditText)this.findViewById(R.id.pass_value);
         EditText passField2 = (EditText)this.findViewById(R.id.pass_value2);
@@ -70,18 +75,47 @@ public class Register extends ActionBarActivity {
         String pass = passField.getText().toString();
         String pass2 = passField2.getText().toString();
 
-        if(validate(name, pass, pass2)){
-
-        User user = new User(name, pass);
-
-        UserBo userBo = new UserBo(user);
-        userBo.registerNewUser();
+        if(!validate(name, pass, pass2)){
+            Toast.makeText(getApplicationContext(), "Complete ambos campos"
+                    , Toast.LENGTH_LONG).show();
         }
+        else{
 
 
+            User user = new User(name, pass);
+            UserBo userBo = new UserBo(user);
 
-        startActivity(new Intent("tk.ebalsa.activities.Home"));
-        this.finish();
+            try{
+                MyReturn ret = userBo.registerNewUser();//Retorno de la operacion contra el server
+
+
+                //Register OK
+                if(ret.getBody()== MyReturn.statusType.OK){
+                    //FALTARIA PASAR EL USER COMO PARAMETRO
+                    startActivity(new Intent("tk.ebalsa.activities.Home"));
+                    this.finish();
+                }
+                else{ //Retorna CONFLICT
+
+                    Toast.makeText(getApplicationContext(), "nombre de usuario no disponible"
+                            , Toast.LENGTH_LONG).show();
+
+
+                }
+            }
+            catch (TimeoutException t){
+                Toast.makeText(getApplicationContext(), "timeout" , Toast.LENGTH_LONG).show();
+            }
+            catch (ExecutionException e){
+                Toast.makeText(getApplicationContext(), "Vaya, algo ha fallado....inténtalo mas tarde"
+                        , Toast.LENGTH_LONG).show();
+            }
+            catch (Exception e){
+                Toast.makeText(getApplicationContext(), "Vaya, algo ha fallado....inténtalo mas tarde"
+                        , Toast.LENGTH_LONG).show();
+            }
+
+        }
 
     }
 

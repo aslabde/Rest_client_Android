@@ -3,7 +3,6 @@ package tk.ebalsa.rest1.bo;
 import android.os.AsyncTask;
 import android.util.Log;
 
-import org.apache.http.HttpStatus;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.web.client.RestTemplate;
 
@@ -33,8 +32,8 @@ public class UserBo {
         this.user = user;
     }
 
-    public void registerNewUser(){
-        new HttpRequestTask(this.user).execute();
+    public MyReturn registerNewUser() throws InterruptedException, ExecutionException, TimeoutException {
+        return new HttpRequestTask(this.user).execute().get(10, TimeUnit.SECONDS);
 
     }
 
@@ -44,7 +43,8 @@ public class UserBo {
     }
 
 
-    private class HttpRequestTask extends AsyncTask<Void, Void, String> {
+    //Class to make register task
+    private class HttpRequestTask extends AsyncTask<Void, Void, MyReturn> {
 
        private User user;
 
@@ -54,30 +54,27 @@ public class UserBo {
        }
 
         @Override
-        protected String doInBackground(Void... params) {
+        protected MyReturn doInBackground(Void... params) {
             try {
                 String url = "http://192.168.1.128:8080/Rest1/register";
                 RestTemplate restTemplate = new RestTemplate();
 
                 restTemplate.getMessageConverters().add(new MappingJackson2HttpMessageConverter());
 
-
-                //No estas retornando nada
-
-                HttpStatus hs = restTemplate.postForObject(url, user, HttpStatus.class);
-                if (hs.equals(HttpStatus.SC_OK)){
-                    return "success";
-                }
+                MyReturn myret = restTemplate.postForObject(url, this.user, MyReturn.class);
+                return myret;
 
             } catch (Exception e) {
+                //Alert "server unavailable"
                 Log.e("MainActivity", e.getMessage(), e);
             }
 
-            return "error";
-        }
 
+            return null;
+        }
     }
 
+    //Class to  login
     private class HttpRequestTask2 extends AsyncTask<User, Void, MyReturn> {
 
         private User user;

@@ -62,34 +62,41 @@ public class Login extends ActionBarActivity {
                     , Toast.LENGTH_LONG).show();
         }
 
-        //Crea instancia de userBo con los datos introducidos de usuario
-        User user = new User(name, pass);
-        UserBo userBo = new UserBo(user);
+        else {
 
 
-        try{
-            MyReturn ret = userBo.loginUser();//Retorno de la operacion contra el server
+            //Crea instancia de userBo con los datos introducidos de usuario
+            User user = new User(name, pass);
+            UserBo userBo = new UserBo(user);
 
 
-            //Login OK
-            if(ret.getBody()== MyReturn.statusType.OK){
-               //FALTARIA PASAR EL USER COMO PARAMETRO
-               startActivity(new Intent("tk.ebalsa.activities.Home"));
-               this.finish();
+            try{
+                MyReturn ret = userBo.loginUser();//Retorno de la operacion contra el server
+
+
+                //Login OK
+                if(ret.getBody()== MyReturn.statusType.OK){
+                   //FALTARIA PASAR EL USER COMO PARAMETRO
+                   startActivity(new Intent("tk.ebalsa.activities.Home"));
+                   this.finish();
+                }
+                else{ //(Login error)
+
+                   Toast.makeText(getApplicationContext(), "error en el login" , Toast.LENGTH_LONG).show();
+                }
             }
-            else{ //(Login error)
-
-               Toast.makeText(getApplicationContext(), "error en el login" , Toast.LENGTH_LONG).show();
+            catch (TimeoutException t){
+                Toast.makeText(getApplicationContext(), "timeout" , Toast.LENGTH_LONG).show();
+            }
+            catch (ExecutionException e){
+                Toast.makeText(getApplicationContext(), "Vaya, algo ha fallado....inténtalo mas tarde"
+                        , Toast.LENGTH_LONG).show();
+            }
+            catch (Exception e){
+                Toast.makeText(getApplicationContext(), "Vaya, algo ha fallado....inténtalo mas tarde"
+                        , Toast.LENGTH_LONG).show();
             }
         }
-        catch (TimeoutException t){
-            Toast.makeText(getApplicationContext(), "timeout" , Toast.LENGTH_LONG).show();
-        }
-        catch (ExecutionException e){
-            Toast.makeText(getApplicationContext(), "Vaya, algo ha fallado....inténtalo mas tarde"
-                    , Toast.LENGTH_LONG).show();
-        }
-
     }
 
     //Pasa a la screen de register
