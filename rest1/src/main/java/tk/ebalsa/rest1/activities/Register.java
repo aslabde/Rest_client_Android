@@ -3,6 +3,7 @@ package tk.ebalsa.rest1.activities;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
+import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -56,10 +57,14 @@ public class Register extends ActionBarActivity {
 
         if(name.matches("") || pass.matches("") || pass2.matches("")){
 
+            toastError("Complete todos los campos");
             return false;
         }
 
-
+        if(!pass.equals(pass2)){
+            toastError("Las contraseñas no coinciden");
+            return false;
+        }
 
         return true;
     }
@@ -76,8 +81,7 @@ public class Register extends ActionBarActivity {
         String pass2 = passField2.getText().toString();
 
         if(!validate(name, pass, pass2)){
-            Toast.makeText(getApplicationContext(), "Complete ambos campos"
-                    , Toast.LENGTH_LONG).show();
+
         }
         else{
 
@@ -92,33 +96,35 @@ public class Register extends ActionBarActivity {
                 //Register OK
                 if(ret.getBody()== MyReturn.statusType.OK){
                     //FALTARIA PASAR EL USER COMO PARAMETRO
+                    //DIALOG REGISTRO
                     startActivity(new Intent("tk.ebalsa.activities.Home"));
                     this.finish();
                 }
                 else{ //Retorna CONFLICT
+                    toastError("nombre de usuario no disponible, pruebe con otro");
+                 }
 
-                    Toast.makeText(getApplicationContext(), "nombre de usuario no disponible"
-                            , Toast.LENGTH_LONG).show();
-
-
-                }
             }
             catch (TimeoutException t){
-                Toast.makeText(getApplicationContext(), "timeout" , Toast.LENGTH_LONG).show();
+                toastError("Tiempo de espera agotado. Por favor inténtelo más tarde");
             }
             catch (ExecutionException e){
-                Toast.makeText(getApplicationContext(), "Vaya, algo ha fallado....inténtalo mas tarde"
-                        , Toast.LENGTH_LONG).show();
+                toastError("Vaya...algo ha fallado. Por favor intentalo más tarde de nuevo");
             }
             catch (Exception e){
-                Toast.makeText(getApplicationContext(), "Vaya, algo ha fallado....inténtalo mas tarde"
-                        , Toast.LENGTH_LONG).show();
+                toastError("Vaya...algo ha fallado. Por favor intentalo más tarde de nuevo");
             }
 
         }
 
     }
 
+    protected void toastError (String err){
+        Toast toast = Toast.makeText(this.getApplicationContext(), err, Toast.LENGTH_LONG);
+        toast.setGravity(Gravity.CENTER, 0, 0);
+        toast.show();
+
+    }
 
 
 }

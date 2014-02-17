@@ -59,10 +59,7 @@ public class Login extends ActionBarActivity {
         String pass = passField.getText().toString();
 
         if (!validate(name, pass)){
-            Toast toast = new Toast(getApplicationContext());
-            toast.setGravity(Gravity.CENTER_VERTICAL, 0, 0);
-            toast.setDuration(Toast.LENGTH_LONG);
-            toast.setText("Complete ambos campos");
+            toastError("Complete ambos campos");
 
         }
 
@@ -85,29 +82,17 @@ public class Login extends ActionBarActivity {
                    this.finish();
                 }
                 else{ //(Login error)
-                    Toast toast = new Toast(getApplicationContext());
-                    toast.setGravity(Gravity.CENTER_VERTICAL, 0, 0);
-                    toast.setDuration(Toast.LENGTH_LONG);
-                    toast.setText("Error en la identificacion Usuario/Contraseña");
+                     toastError("No existe esa combinacion usuario/contraseña");
                 }
             }
             catch (TimeoutException t){
-                Toast toast = new Toast(getApplicationContext());
-                toast.setGravity(Gravity.CENTER_VERTICAL, 0, 0);
-                toast.setDuration(Toast.LENGTH_LONG);
-                toast.setText("Vaya...algo ha fallado. Por favor intentalo más tarde de nuevo");
+                toastError("Tiempo de espera agotado. Por favor inténtelo más tarde");
             }
             catch (ExecutionException e){
-                Toast toast = new Toast(getApplicationContext());
-                toast.setGravity(Gravity.CENTER_VERTICAL, 0, 0);
-                toast.setDuration(Toast.LENGTH_LONG);
-                toast.setText("Vaya...algo ha fallado. Por favor intentalo más tarde de nuevo");
+                toastError("Vaya...algo ha fallado. Por favor intentalo más tarde de nuevo");
             }
             catch (Exception e){
-                Toast toast = new Toast(getApplicationContext());
-                toast.setGravity(Gravity.CENTER_VERTICAL, 0, 0);
-                toast.setDuration(Toast.LENGTH_LONG);
-                toast.setText("Vaya...algo ha fallado. Por favor intentalo más tarde de nuevo");
+                toastError("Vaya...algo ha fallado. Por favor intentalo más tarde de nuevo");
             }
         }
     }
@@ -129,6 +114,11 @@ public class Login extends ActionBarActivity {
         return true;
     }
 
+    protected void toastError (String err){
+        Toast toast = Toast.makeText(this.getApplicationContext(), err, Toast.LENGTH_LONG);
+        toast.setGravity(Gravity.CENTER, 0, 0);
+        toast.show();
 
+    }
 
 }
