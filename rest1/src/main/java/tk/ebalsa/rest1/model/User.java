@@ -1,9 +1,11 @@
 package tk.ebalsa.rest1.model;
 
+import java.io.Serializable;
+
 /**
  * Created by ebalsa.gmail.com on 10/02/14.
  */
-public class User {
+public class User implements Serializable {
 
 
     private String name;

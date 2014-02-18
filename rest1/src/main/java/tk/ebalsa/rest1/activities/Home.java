@@ -1,10 +1,13 @@
 package tk.ebalsa.rest1.activities;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
+import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.LinearLayout;
+import android.widget.Toast;
 
 import tk.ebalsa.rest1.R;
 import tk.ebalsa.rest1.model.User;
@@ -20,6 +23,16 @@ public class Home extends ActionBarActivity {
         setContentView(R.layout.activity_home);
 
         home = (LinearLayout) findViewById(R.id.home);
+
+        //Recover user passed as arg
+        Intent i = getIntent();
+        currentUser = (User)i.getExtras().getSerializable("currentUser");
+
+        Toast toast = Toast.makeText(this.getApplicationContext(), "Bienvenid@ " + currentUser
+                .getName()
+                , Toast.LENGTH_LONG);
+        toast.setGravity(Gravity.CENTER, 0, 0);
+        toast.show();
     }
 
 

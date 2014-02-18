@@ -77,9 +77,12 @@ public class Login extends ActionBarActivity {
 
                 //Login OK
                 if(ret.getBody()== MyReturn.statusType.OK){
-                   //FALTARIA PASAR EL USER COMO PARAMETRO
-                   startActivity(new Intent("tk.ebalsa.activities.Home"));
-                   this.finish();
+                   //PASAR EL USER COMO PARAMETRO
+                   Intent i = new Intent("tk.ebalsa.activities.Home");
+                    i.putExtra("currentUser", user);
+                    startActivity(i);
+                    this.finish();
+
                 }
                 else{ //(Login error)
                      toastError("No existe esa combinacion usuario/contraseña");

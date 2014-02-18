@@ -1,5 +1,7 @@
 package tk.ebalsa.rest1.activities;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
@@ -96,10 +98,25 @@ public class Register extends ActionBarActivity {
                 //Register OK
                 if(ret.getBody()== MyReturn.statusType.OK){
                     //FALTARIA PASAR EL USER COMO PARAMETRO
-                    //DIALOG REGISTRO
-                    startActivity(new Intent("tk.ebalsa.activities.Home"));
-                    this.finish();
+
+
+                    //DIALOG REGISTRO OK
+                    AlertDialog.Builder builder = new AlertDialog.Builder(this)
+                            .setIcon(R.drawable.ic_launcher)
+                            .setTitle("Te has registrado como " + name)
+                    .setPositiveButton("OK",
+                            new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int whichButton)
+                                {
+                                 closeA();
+
+                                }
+                            }
+                    );
+                    builder.show();
+
                 }
+
                 else{ //Retorna CONFLICT
                     toastError("nombre de usuario no disponible, pruebe con otro");
                  }
@@ -124,6 +141,11 @@ public class Register extends ActionBarActivity {
         toast.setGravity(Gravity.CENTER, 0, 0);
         toast.show();
 
+    }
+
+    public void closeA (){
+        startActivity(new Intent("tk.ebalsa.activities.Home"));
+        this.finish();
     }
 
 
