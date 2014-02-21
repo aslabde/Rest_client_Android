@@ -6,16 +6,27 @@ import android.support.v7.app.ActionBarActivity;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeoutException;
+
 import tk.ebalsa.rest1.R;
+import tk.ebalsa.rest1.bo.ResourceBo;
+import tk.ebalsa.rest1.model.CatalogUnit;
+import tk.ebalsa.rest1.model.Resource;
 import tk.ebalsa.rest1.model.User;
 
 public class Home extends ActionBarActivity {
 
     private User currentUser;
     private LinearLayout home;
+    private ResourceBo resourceBo = new ResourceBo();
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,6 +77,76 @@ public class Home extends ActionBarActivity {
         this.currentUser = currentUser;
     }
 
+    //Connect to server and fetch catalog
+    protected List<CatalogUnit> getCatalog() throws InterruptedException, ExecutionException, TimeoutException {
+        List<CatalogUnit> catalog = new ArrayList<CatalogUnit>();
 
+        catalog=resourceBo.getCatalog();
+        return catalog;
+    }
+
+    //Extract current pending urls from resources
+    protected List<String> parseUrls(List<CatalogUnit> catalog){
+        List<String> urls = new ArrayList<String>();
+
+
+        for(CatalogUnit c: catalog){
+            urls.add(c.getLink2resource());
+        }
+
+        return urls;
+
+    }
+
+    //Connect to server and fetch new resources
+    protected List<Resource> getResources(List<String> urls) throws InterruptedException, ExecutionException, TimeoutException {
+        List<Resource> resources = new ArrayList<Resource>();
+
+        for (String u: urls){
+            resources.add(this.resourceBo.getResource(u));
+        }
+
+        return resources;
+    }
+
+    //Do layout showing resources
+    public void showResources(View view){
+        this.doResourcesLayout();
+    }
+
+
+    protected void doResourcesLayout(){
+
+        //Need change to append only new. Local variable?
+        try {
+        /*List<CatalogUnit> catalog = this.getCatalog();
+        List<String> links = this.parseUrls(catalog);
+        List<Resource> resources = this.getResources(links);*/
+
+
+
+        List<Resource> resources2show = new ArrayList<Resource>();
+
+
+
+        resources2show=this.getResources(parseUrls(getCatalog()));
+
+        if(!resources2show.isEmpty()){
+
+                for(Resource r: resources2show){
+                   System.out.println(r.getBody());
+
+                }
+        }
+
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        } catch (TimeoutException e) {
+            e.printStackTrace();
+        }
+
+    }
 
 }
