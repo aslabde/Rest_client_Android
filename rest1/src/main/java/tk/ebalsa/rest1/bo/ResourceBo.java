@@ -70,7 +70,7 @@ public class ResourceBo {
     }
 
     //Class to  login
-    private class HttpRequestTask2 extends AsyncTask<String, Void, Resource> {
+    private class HttpRequestTask2 extends AsyncTask<Void, Void, Resource> {
 
         private String link;
 
@@ -80,11 +80,12 @@ public class ResourceBo {
         }
 
         @Override
-        protected Resource doInBackground(String... link)  {
-
+        protected Resource doInBackground(Void... params){
             try {
-                //String url = new String("http://192.168.1.128:8080/Rest1" + link);
-                String url = new String("http://192.168.1.128:8080/Rest1/resources/28");
+
+                StringBuilder sb = new StringBuilder().append("http://192.168.1.128:8080/Rest1")
+                        .append(link);
+                String url =sb.toString();
                 RestTemplate restTemplate = new RestTemplate();
 
                 restTemplate.getMessageConverters().add(new MappingJackson2HttpMessageConverter());

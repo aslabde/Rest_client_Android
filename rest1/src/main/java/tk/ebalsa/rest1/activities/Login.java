@@ -1,6 +1,7 @@
 package tk.ebalsa.rest1.activities;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.view.Gravity;
@@ -25,6 +26,13 @@ public class Login extends ActionBarActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
+        // Restore preferences
+        SharedPreferences settings = getSharedPreferences("user_preferences", 0);
+        String userName = settings.getString("userName","");
+
+        //Set prefered user name
+        EditText userField = (EditText)this.findViewById(R.id.user_name_value1);
+        userField.setText(userName);
     }
 
 
@@ -77,6 +85,19 @@ public class Login extends ActionBarActivity {
 
                 //Login OK
                 if(ret.getBody()== MyReturn.statusType.OK){
+
+                    //Guardar usuario como preferido
+                    // We need an Editor object to make preference changes.
+                    // All objects are from android.context.Context
+                    SharedPreferences settings = getSharedPreferences("user_preferences", 0);
+                    SharedPreferences.Editor editor = settings.edit();
+
+                    editor.putString("userName",name);
+
+                    // Commit the edits!
+                    editor.commit();
+
+
                    //PASAR EL USER COMO PARAMETRO
                    Intent i = new Intent("tk.ebalsa.activities.Home");
                     i.putExtra("currentUser", user);
@@ -123,5 +144,6 @@ public class Login extends ActionBarActivity {
         toast.show();
 
     }
+
 
 }
