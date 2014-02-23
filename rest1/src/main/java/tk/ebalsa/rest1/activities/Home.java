@@ -6,6 +6,7 @@ import android.app.TaskStackBuilder;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v4.app.NotificationCompat;
 import android.support.v7.app.ActionBarActivity;
@@ -32,6 +33,7 @@ import tk.ebalsa.rest1.bo.ResourceBo;
 import tk.ebalsa.rest1.model.CatalogUnit;
 import tk.ebalsa.rest1.model.Resource;
 import tk.ebalsa.rest1.model.User;
+import tk.ebalsa.rest1.persistence.DBCache;
 
 import static java.util.concurrent.TimeUnit.SECONDS;
 
@@ -55,6 +57,9 @@ public class Home extends ActionBarActivity {
     final ScheduledFuture updaterHandle =
             scheduler.scheduleAtFixedRate(updater, 0, UPDATE_RATE, SECONDS);
 
+    //DB Cache
+    private DBCache dbcache;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -72,9 +77,9 @@ public class Home extends ActionBarActivity {
         toast.setGravity(Gravity.CENTER, 0, 0);
         toast.show();
 
-        //TODO:
         //Recover resources from local cache
-        //this.localResources =
+        this.dbcache =new DBCache(this);
+        this.localResources = this.getResourcesFromLocalCache();
     }
 
 
@@ -142,7 +147,14 @@ public class Home extends ActionBarActivity {
 
     //Do layout showing resources
     public void showResources(View view){
-        this.updateResources();
+
+        //DELETE...JUST FOR TESTS
+        for(Resource r: this.localResources){
+            System.out.println(r.getBody());
+            System.out.println(dateFormat.format(r.getPubDate()));
+
+        }
+
     }
 
 
@@ -171,7 +183,9 @@ public class Home extends ActionBarActivity {
             if (!resourcesFetched.isEmpty()){
 
                 //DBA CONDITIONAL SAVE
+                this.conditionalSaveResources(resourcesFetched);
                 this.localResources.addAll(resourcesFetched);
+
                 //FIRE UI
 
                 //DISPLAY ON STATUS BAR NOTIFICATION (FALTARIA  AGRUPAR)
@@ -179,21 +193,12 @@ public class Home extends ActionBarActivity {
                         , localResources.get(0).getResourceId());
             }
 
-        //last update
+        //Upate last update
             System.out.println("Ultima actualziacion: " + getLastUpdate() );//<-DELETE
         this.setLastUpdate(new Date());
 
-        //DELETE...JUST FOR TESTS
-            for(Resource r: localResources){
-                System.out.println(r.getBody());
-                System.out.println(dateFormat.format(r.getPubDate()));
-
-
-            }
-
             System.out.println("nueva actualziacion: " + getLastUpdate() );
 
-            //////////
 
         } catch (InterruptedException e) {
             e.printStackTrace();
@@ -257,4 +262,79 @@ public class Home extends ActionBarActivity {
         // Id allows you to update the notification later on.
         mNotificationManager.notify((int)id , mBuilder.build());
     }
+
+
+    //MODEL-PERSISTENCE OPS:
+
+    //get resources from DB.
+    public List<Resource> getResourcesFromLocalCache(){
+        List<Resource> savedResources = new ArrayList<Resource>();
+
+        dbcache.open();
+        Cursor c = dbcache.getAllContacts();
+        if (c.moveToFirst())
+        {
+            do {
+                Resource res =getResourceFromDB(c);
+                if(res!=null)
+                savedResources.add(getResourceFromDB(c));
+            } while (c.moveToNext());
+        }
+        dbcache.close();
+
+        return savedResources;
+
+
+    }
+
+    //Save or update fetched Resources
+    private void conditionalSaveResources(List<Resource> resourcesFetched){
+        //TODO:
+        //Add logic to save/update resources
+
+        this.saveNewResources(resourcesFetched);
+    }
+
+
+
+    //DATABASE ACCESS CODE
+    private Resource getResourceFromDB(Cursor c){
+        //Get pars from Cursor
+        long id = c.getLong(0);
+        long pudDateLong = c.getLong(3);
+        Date pubdate = new Date(pudDateLong);
+        long endDateLong = c.getLong(4);
+        Date endDate = new Date(endDateLong);
+        String title = c.getString(1);
+        String body = c.getString(2);
+
+        //Cast pars from DB to model resource
+        Resource res = new Resource(id, pubdate, endDate, title , body);
+
+
+        //Ensures resource belongs to current user
+        if(c.getString(5).equals(currentUser.getName())){
+            return res;
+        }
+
+        return null;
+    }
+
+    //Save resurces to DB
+    public void saveNewResources(List<Resource> newResources){
+
+        for(Resource r: newResources){
+            long id = r.getResourceId();
+            String title = r.getTitle();
+            String body = r.getBody();
+            long pubDate = r.getPubDate().getTime();
+            long endDate = r.getEndDate().getTime();
+            String userActive = currentUser.getName();
+
+            dbcache.insertResource(id, title, body, pubDate, endDate, userActive);
+        }
+
+    }
+
+
 }

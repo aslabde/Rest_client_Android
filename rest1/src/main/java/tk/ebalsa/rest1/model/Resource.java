@@ -15,7 +15,8 @@ public class Resource {
     public Resource(){};
 
 
-    public Resource(Date publishingDate, Date endDate, String title, String body) {
+    public Resource(long resourceId, Date publishingDate, Date endDate, String title, String body) {
+        this.resourceId = resourceId;
         this.pubDate = publishingDate;
         this.endDate = endDate;
         this.title = title;
