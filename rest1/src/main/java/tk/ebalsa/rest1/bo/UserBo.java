@@ -57,7 +57,7 @@ public class UserBo {
         @Override
         protected MyReturn doInBackground(Void... params) {
             try {
-                String url ="http://192.168.1.130:8080/Rest1/login/register";
+                String url ="http://192.168.1.130:8080/Rest1/register";
                 RestTemplate restTemplate = new RestTemplate();
 
                 restTemplate.getMessageConverters().add(new MappingJackson2HttpMessageConverter());

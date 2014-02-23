@@ -25,6 +25,8 @@ import tk.ebalsa.rest1.model.User;
  */
 public class Register extends ActionBarActivity {
 
+    User user = null;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -89,6 +91,7 @@ public class Register extends ActionBarActivity {
 
 
             User user = new User(name, pass);
+            this.user=user;
             UserBo userBo = new UserBo(user);
 
             try{
@@ -144,7 +147,9 @@ public class Register extends ActionBarActivity {
     }
 
     public void closeA (){
-        startActivity(new Intent("tk.ebalsa.activities.Home"));
+        Intent i = new Intent("tk.ebalsa.activities.Home");
+        i.putExtra("currentUser", this.user);
+        startActivity(i);
         this.finish();
     }
 

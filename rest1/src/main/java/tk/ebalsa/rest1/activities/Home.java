@@ -1,8 +1,13 @@
 package tk.ebalsa.rest1.activities;
 
+import android.app.NotificationManager;
+import android.app.PendingIntent;
+import android.app.TaskStackBuilder;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.support.v4.app.NotificationCompat;
 import android.support.v7.app.ActionBarActivity;
 import android.view.Gravity;
 import android.view.Menu;
@@ -45,7 +50,7 @@ public class Home extends ActionBarActivity {
     private final ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
     final Runnable updater = new Runnable() {
         public void run() {updateResources();
-        };
+        }
     };
     final ScheduledFuture updaterHandle =
             scheduler.scheduleAtFixedRate(updater, 0, UPDATE_RATE, SECONDS);
@@ -169,8 +174,9 @@ public class Home extends ActionBarActivity {
                 this.localResources.addAll(resourcesFetched);
                 //FIRE UI
 
-                //DISPLAY ON STATUS BAR NOTIFICATION
-
+                //DISPLAY ON STATUS BAR NOTIFICATION (FALTARIA  AGRUPAR)
+                this.displayOnStatusBar(localResources.get(0).getTitle()
+                        , localResources.get(0).getResourceId());
             }
 
         //last update
@@ -218,5 +224,37 @@ public class Home extends ActionBarActivity {
         Long lastUpdate = settings.getLong("lastUpdate", 0);
 
         return new Date(lastUpdate);
+    }
+
+    private void displayOnStatusBar(String title, long id){
+        NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(this)
+                        .setSmallIcon(R.drawable.ic_launcher)//<-AÑADIR ICONO
+                        .setContentTitle("nuevo recurso!!")
+                        .setContentText(title)
+                        .setAutoCancel(true);
+        // Creates an explicit intent for an Activity in your app
+        Intent resultIntent = new Intent(this, Home.class);
+        resultIntent.putExtra("currentUser", currentUser);
+
+        //ARREGLAR ESTA PARTE.
+        // The stack builder object will contain an artificial back stack for the
+        // started Activity.
+        // This ensures that navigating backward from the Activity leads out of
+        // your application to the Home screen.
+        TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);
+        // Adds the back stack for the Intent (but not the Intent itself)
+        stackBuilder.addParentStack(Home.class);
+        // Adds the Intent that starts the Activity to the top of the stack
+        stackBuilder.addNextIntent(resultIntent);
+        PendingIntent resultPendingIntent =
+                stackBuilder.getPendingIntent(
+                        0,
+                        PendingIntent.FLAG_UPDATE_CURRENT
+                );
+        mBuilder.setContentIntent(resultPendingIntent);
+        NotificationManager mNotificationManager =
+                (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+        // Id allows you to update the notification later on.
+        mNotificationManager.notify((int)id , mBuilder.build());
     }
 }
