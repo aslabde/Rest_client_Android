@@ -49,7 +49,7 @@ public class ResourceBo {
         @Override
         protected  List<CatalogUnit> doInBackground(Void... params) {
             try {
-                String url = "http://192.168.1.128:8080/Rest1/catalog";
+                String url = "http://192.168.1.130:8080/Rest1/catalog";
                 RestTemplate restTemplate = new RestTemplate();
 
                 restTemplate.getMessageConverters().add(new MappingJackson2HttpMessageConverter());
@@ -83,7 +83,7 @@ public class ResourceBo {
         protected Resource doInBackground(Void... params){
             try {
 
-                StringBuilder sb = new StringBuilder().append("http://192.168.1.128:8080/Rest1")
+                StringBuilder sb = new StringBuilder().append("http://192.168.1.130:8080/Rest1")
                         .append(link);
                 String url =sb.toString();
                 RestTemplate restTemplate = new RestTemplate();
