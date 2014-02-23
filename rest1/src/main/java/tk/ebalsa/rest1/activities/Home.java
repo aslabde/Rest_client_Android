@@ -202,7 +202,7 @@ public class Home extends ActionBarActivity {
     private void setLastUpdate(Date newUpdate){
         // We need an Editor object to make preference changes.
         // All objects are from android.context.Context
-        SharedPreferences settings = getSharedPreferences("user_preferences", 0);
+        SharedPreferences settings = getSharedPreferences(this.currentUser.getName(), 0);
         SharedPreferences.Editor editor = settings.edit();
 
         editor.putLong("lastUpdate", newUpdate.getTime());
@@ -214,7 +214,7 @@ public class Home extends ActionBarActivity {
 
     private Date getLastUpdate(){
         // Restore preferences
-        SharedPreferences settings = getSharedPreferences("user_preferences", 0);
+        SharedPreferences settings = getSharedPreferences(this.currentUser.getName(), 0);
         Long lastUpdate = settings.getLong("lastUpdate", 0);
 
         return new Date(lastUpdate);
