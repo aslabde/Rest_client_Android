@@ -71,6 +71,7 @@ public class Home extends ActionBarActivity {
         Intent i = getIntent();
         currentUser = (User)i.getExtras().getSerializable("currentUser");
 
+        //Display welcome msg
         Toast toast = Toast.makeText(this.getApplicationContext(), "Bienvenid@ " + currentUser
                 .getName()
                 , Toast.LENGTH_LONG);
@@ -160,7 +161,6 @@ public class Home extends ActionBarActivity {
 
     protected void updateResources(){
 
-        //Need change to append only new. Local variable?
         try {
             List<CatalogUnit> catalog = this.getCatalog();
             List<String> links = new ArrayList<String>();
@@ -189,15 +189,12 @@ public class Home extends ActionBarActivity {
                 //FIRE UI
 
                 //DISPLAY ON STATUS BAR NOTIFICATION (FALTARIA  AGRUPAR)
-                this.displayOnStatusBar(localResources.get(0).getTitle()
-                        , localResources.get(0).getResourceId());
+                this.displayOnStatusBar(resourcesFetched.get(0).getTitle()
+                        , resourcesFetched.get(0).getResourceId());
             }
 
         //Upate last update
-            System.out.println("Ultima actualziacion: " + getLastUpdate() );//<-DELETE
         this.setLastUpdate(new Date());
-
-            System.out.println("nueva actualziacion: " + getLastUpdate() );
 
 
         } catch (InterruptedException e) {
@@ -213,6 +210,7 @@ public class Home extends ActionBarActivity {
     private void setLastUpdate(Date newUpdate){
         // We need an Editor object to make preference changes.
         // All objects are from android.context.Context
+        // Saved on file with users name
         SharedPreferences settings = getSharedPreferences(this.currentUser.getName(), 0);
         SharedPreferences.Editor editor = settings.edit();
 
@@ -271,7 +269,7 @@ public class Home extends ActionBarActivity {
         List<Resource> savedResources = new ArrayList<Resource>();
 
         dbcache.open();
-        Cursor c = dbcache.getAllContacts();
+        Cursor c = dbcache.getAllResources();
         if (c.moveToFirst())
         {
             do {
@@ -331,7 +329,9 @@ public class Home extends ActionBarActivity {
             long endDate = r.getEndDate().getTime();
             String userActive = currentUser.getName();
 
+            dbcache.open();
             dbcache.insertResource(id, title, body, pubDate, endDate, userActive);
+            dbcache.close();
         }
 
     }

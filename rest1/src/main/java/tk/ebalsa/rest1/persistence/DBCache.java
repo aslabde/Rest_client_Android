@@ -6,6 +6,7 @@ import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.util.Log;
 
 /**
  * Created by ebalsa.gmail.com on 23/02/14.
@@ -19,10 +20,12 @@ public class DBCache {
     static final String USER_ACTIVE = "userActive";
     static final String DATABASE_NAME = "local_cache";
     static final int DATABASE_VERSION = 1;
+    static final String TAG = "DBCache";
     static final String DATABASE_TABLE = "resources";
     static final String DATABASE_CREATE =
-    " create table resurces (id integer primary key , title text, body text " +
-            ",pubDate integer, endDate integer, userActive text)";
+    " create table resources (id integer not null, title text, body text " +
+            ",pubDate integer, endDate integer, userActive text not null, " +
+            "PRIMARY KEY(id, userActive))";
 
     final Context context;
     DatabaseHelper DBHelper;
@@ -50,8 +53,10 @@ public class DBCache {
         }
 
         @Override
-        public void onUpgrade(SQLiteDatabase sqLiteDatabase, int i, int i2) {
-            //NOT IMPLEMENTED YET
+        public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+            Log.w(TAG, "Upgrading database from version" + oldVersion + " to " + newVersion);
+            db.execSQL("DROP TABLE IF EXISTS resources");
+            onCreate(db);
         }
 
     }
@@ -68,18 +73,21 @@ public class DBCache {
     }
 
     //---insert a resource into the database---
-    public long insertResource(long id, String title, String body, long pubDate,
-                               long endDate, String userActive ){
+    public void insertResource(long id, String title, String body, long pubDate,
+                               long endDate, String userActive){
         ContentValues initialValues = new ContentValues();
-        initialValues.put(KEY_ROWID, id);
+        initialValues.put(KEY_ROWID, (int)id);
         initialValues.put(KEY_TITLE, title);
         initialValues.put(KEY_BODY, body);
         initialValues.put(PUB_DATE, (int)pubDate);
         initialValues.put(END_DATE, (int)endDate );
         initialValues.put(USER_ACTIVE,userActive );
 
-
-        return db.insert(DATABASE_TABLE, null, initialValues);
+        try{
+         db.insertOrThrow(DATABASE_TABLE, null, initialValues);
+        }catch (SQLException e){
+            e.printStackTrace();
+        }
     }
 
     //---deletes a particular resource---
@@ -88,7 +96,7 @@ public class DBCache {
     }
 
     //---retrieves all the resources---
-    public Cursor getAllContacts(){
+    public Cursor getAllResources(){
         return db.query(DATABASE_TABLE, new String[] {KEY_ROWID, KEY_TITLE,
                 KEY_BODY, PUB_DATE, END_DATE, USER_ACTIVE}, null, null, null, null, null);
     }
