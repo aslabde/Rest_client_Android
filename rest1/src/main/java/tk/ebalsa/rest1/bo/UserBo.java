@@ -16,7 +16,7 @@ import tk.ebalsa.rest1.model.User;
 /**
  * Created by ebalsa.gmail.com on 10/02/14.
  */
-public class UserBo {
+public class UserBo extends BaseBo{
 
     //protected String server_path = ;
     private User user;
@@ -57,7 +57,7 @@ public class UserBo {
         @Override
         protected MyReturn doInBackground(Void... params) {
             try {
-                String url ="http://192.168.1.131:8080/Rest1/register";
+                String url =PATH_TO_SERVER + "/register";
                 RestTemplate restTemplate = new RestTemplate();
 
                 restTemplate.getMessageConverters().add(new MappingJackson2HttpMessageConverter());
@@ -89,7 +89,7 @@ public class UserBo {
         protected MyReturn doInBackground(User... user)  {
 
             try {
-                String url = "http://192.168.1.131:8080/Rest1/login";
+                String url = PATH_TO_SERVER + "/login";
                 RestTemplate restTemplate = new RestTemplate();
 
                 restTemplate.getMessageConverters().add(new MappingJackson2HttpMessageConverter());

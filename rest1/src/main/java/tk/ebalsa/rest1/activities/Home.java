@@ -231,7 +231,7 @@ public class Home extends ActionBarActivity {
 
     private void displayOnStatusBar(String title, long id){
         NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(this)
-                        .setSmallIcon(R.drawable.ic_launcher)//<-AÑADIR ICONO
+                        .setSmallIcon(R.drawable.logo)//<-AÑADIR ICONO
                         .setContentTitle("nuevo recurso!!")
                         .setContentText(title)
                         .setAutoCancel(true);

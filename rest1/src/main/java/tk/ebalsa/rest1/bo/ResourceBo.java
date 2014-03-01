@@ -19,7 +19,7 @@ import tk.ebalsa.rest1.model.Resource;
 /**
  * Created by ebalsa.gmail.com on 10/02/14.
  */
-public class ResourceBo {
+public class ResourceBo extends BaseBo{
 
     public ResourceBo() {}
 
@@ -47,7 +47,7 @@ public class ResourceBo {
         @Override
         protected  List<CatalogUnit> doInBackground(Void... params) {
             try {
-                String url = "http://192.168.1.131:8080/Rest1/catalog";
+                String url = PATH_TO_SERVER + "/catalog";
                 RestTemplate restTemplate = new RestTemplate();
 
                 restTemplate.getMessageConverters().add(new MappingJackson2HttpMessageConverter());
@@ -81,9 +81,7 @@ public class ResourceBo {
         protected Resource doInBackground(Void... params){
             try {
 
-                StringBuilder sb = new StringBuilder().append("http://192.168.1.131:8080/Rest1")
-                        .append(link);
-                String url =sb.toString();
+                String url = PATH_TO_SERVER + link;
                 RestTemplate restTemplate = new RestTemplate();
 
                 restTemplate.getMessageConverters().add(new MappingJackson2HttpMessageConverter());

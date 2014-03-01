@@ -105,7 +105,7 @@ public class Register extends ActionBarActivity {
 
                     //DIALOG REGISTRO OK
                     AlertDialog.Builder builder = new AlertDialog.Builder(this)
-                            .setIcon(R.drawable.ic_launcher)
+                            .setIcon(R.drawable.rinky)
                             .setTitle("Te has registrado como " + name)
                     .setPositiveButton("OK",
                             new DialogInterface.OnClickListener() {
