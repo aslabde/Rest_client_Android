@@ -8,7 +8,9 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     android:paddingBottom="@dimen/activity_vertical_margin"
     tools:context="tk.ebalsa.rest1.activities.Login$PlaceholderFragment"
-    android:background="@drawable/abc_ab_bottom_solid_dark_holo">
+    android:clickable="false"
+    android:animationCache="false"
+    android:background="@drawable/abc_textfield_search_right_default_holo_dark">
 
 
     <TextView

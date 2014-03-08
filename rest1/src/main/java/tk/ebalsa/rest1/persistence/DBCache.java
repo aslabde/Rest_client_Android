@@ -17,6 +17,8 @@ public class DBCache {
     static final String KEY_BODY  = "body";
     static final String PUB_DATE  = "pubDate";
     static final String END_DATE  = "endDate";
+    static final String MIME_ID   = "mime";
+    static final String PATH_2_IMG= "path2image";
     static final String USER_ACTIVE = "userActive";
     static final String DATABASE_NAME = "local_cache";
     static final int DATABASE_VERSION = 1;
@@ -25,6 +27,7 @@ public class DBCache {
     static final String DATABASE_CREATE =
     " create table resources (id integer not null, title text, body text " +
             ",pubDate integer, endDate integer, userActive text not null, " +
+            "mime text, path2image text " +
             "PRIMARY KEY(id, userActive))";
 
     final Context context;
@@ -74,7 +77,7 @@ public class DBCache {
 
     //---insert a resource into the database---
     public void insertResource(long id, String title, String body, long pubDate,
-                               long endDate, String userActive){
+                               long endDate, String userActive, String mime, String path2image){
         ContentValues initialValues = new ContentValues();
         initialValues.put(KEY_ROWID, (int)id);
         initialValues.put(KEY_TITLE, title);
@@ -82,6 +85,8 @@ public class DBCache {
         initialValues.put(PUB_DATE, (int)pubDate);
         initialValues.put(END_DATE, (int)endDate );
         initialValues.put(USER_ACTIVE,userActive );
+        initialValues.put(MIME_ID,mime);
+        initialValues.put(PATH_2_IMG,path2image);
 
         try{
          db.insertOrThrow(DATABASE_TABLE, null, initialValues);
@@ -98,17 +103,18 @@ public class DBCache {
     //---retrieves all the resources---
     public Cursor getAllResources(){
         return db.query(DATABASE_TABLE, new String[] {KEY_ROWID, KEY_TITLE,
-                KEY_BODY, PUB_DATE, END_DATE, USER_ACTIVE}, null, null, null, null, null);
+                KEY_BODY, PUB_DATE, END_DATE, USER_ACTIVE, MIME_ID, PATH_2_IMG},
+                null, null, null, null, null);
     }
 
 
-    //---retrieves a particular contact---
+    //---retrieves a particular resource---
     public Cursor getContact(long rowId) throws SQLException
     {
         Cursor mCursor =
                 db.query(true, DATABASE_TABLE, new String[] {KEY_ROWID, KEY_TITLE,
-                        KEY_BODY, PUB_DATE, END_DATE, USER_ACTIVE}, KEY_ROWID + "=" + rowId, null,
-            null, null, null, null);
+                        KEY_BODY, PUB_DATE, END_DATE, USER_ACTIVE,MIME_ID, PATH_2_IMG},
+                        KEY_ROWID + "=" + rowId, null, null, null, null, null);
         if (mCursor != null) {
             mCursor.moveToFirst();
         }
@@ -117,7 +123,7 @@ public class DBCache {
 
    //---updates a contact---
     public boolean updateContact(long id, String title, String body, long pubDate,
-                                 long endDate, String userActive )
+                                 long endDate, String userActive, String mime, String path2image )
     {
         ContentValues args = new ContentValues();
         args.put(KEY_ROWID, id);
@@ -126,6 +132,8 @@ public class DBCache {
         args.put(PUB_DATE, (int)pubDate);
         args.put(END_DATE, (int)endDate );
         args.put(USER_ACTIVE,userActive );
+        args.put(MIME_ID, mime);
+        args.put(PATH_2_IMG,path2image);
 
         return db.update(DATABASE_TABLE, args, KEY_ROWID + "=" + id, null) > 0;
     }

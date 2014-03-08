@@ -136,8 +136,11 @@ public class Home extends ActionBarActivity {
     }
 
     //Connect to server and fetch new resources
-    protected List<Resource> getResources(List<String> urls) throws InterruptedException, ExecutionException, TimeoutException {
+    protected List<Resource> getResources(List<String> urls) throws InterruptedException,
+            ExecutionException, TimeoutException {
+
         List<Resource> resources = new ArrayList<Resource>();
+
 
         for (String u: urls){
             resources.add(this.resourceBo.getResource(u));
@@ -305,9 +308,11 @@ public class Home extends ActionBarActivity {
         Date endDate = new Date(endDateLong);
         String title = c.getString(1);
         String body = c.getString(2);
+        String mime =c.getString(5);
+        String path2image = c.getString(6);
 
         //Cast pars from DB to model resource
-        Resource res = new Resource(id, pubdate, endDate, title , body);
+        Resource res = new Resource(id, pubdate, endDate, title , body, mime, path2image);
 
 
         //Ensures resource belongs to current user
@@ -328,9 +333,11 @@ public class Home extends ActionBarActivity {
             long pubDate = r.getPubDate().getTime();
             long endDate = r.getEndDate().getTime();
             String userActive = currentUser.getName();
+            String mime = r.getMime();
+            String path2image = r.getPath2image();
 
             dbcache.open();
-            dbcache.insertResource(id, title, body, pubDate, endDate, userActive);
+            dbcache.insertResource(id, title, body, pubDate, endDate, userActive, mime, path2image);
             dbcache.close();
         }
 

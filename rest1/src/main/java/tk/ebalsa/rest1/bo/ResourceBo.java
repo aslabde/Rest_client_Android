@@ -14,7 +14,9 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
 import tk.ebalsa.rest1.model.CatalogUnit;
+import tk.ebalsa.rest1.model.ReceivedResource;
 import tk.ebalsa.rest1.model.Resource;
+import tk.ebalsa.rest1.model.ResourceCaster;
 
 /**
  * Created by ebalsa.gmail.com on 10/02/14.
@@ -30,8 +32,12 @@ public class ResourceBo extends BaseBo{
     }
 
     public Resource getResource(String link) throws ExecutionException, InterruptedException, TimeoutException {
+        ResourceCaster rc = new ResourceCaster();
 
-     return new HttpRequestTask2(link).execute().get(10, TimeUnit.SECONDS);
+        ReceivedResource rr = new HttpRequestTask2(link).execute().get(10, TimeUnit.SECONDS);
+        //Cast to Resource and  write image to filesystem
+
+        return rc.cast2resource(rr);
     }
 
 
@@ -68,7 +74,7 @@ public class ResourceBo extends BaseBo{
     }
 
     //Class to  login
-    private class HttpRequestTask2 extends AsyncTask<Void, Void, Resource> {
+    private class HttpRequestTask2 extends AsyncTask<Void, Void, ReceivedResource> {
 
         private String link;
 
@@ -78,7 +84,7 @@ public class ResourceBo extends BaseBo{
         }
 
         @Override
-        protected Resource doInBackground(Void... params){
+        protected ReceivedResource doInBackground(Void... params){
             try {
 
                 String url = PATH_TO_SERVER + link;
@@ -86,9 +92,9 @@ public class ResourceBo extends BaseBo{
 
                 restTemplate.getMessageConverters().add(new MappingJackson2HttpMessageConverter());
 
-                Resource resource = restTemplate.getForObject(url, Resource.class );
+                ReceivedResource rr = restTemplate.getForObject(url, ReceivedResource.class );
 
-                return resource;
+                return rr;
 
 
             } catch (Exception e) {

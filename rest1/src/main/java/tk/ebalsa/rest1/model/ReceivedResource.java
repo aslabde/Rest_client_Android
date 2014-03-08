@@ -5,27 +5,26 @@ import java.util.Date;
 /**
  * Created by ebalsa.gmail.com on 20/02/14.
  */
-public class Resource {
+public class ReceivedResource {
     private long resourceId;
     private Date pubDate;
     private Date endDate;
     private String title;
     private String body;
     private String mime;
-    private String path2image;
+    private byte[] image;
 
-    public Resource(){};
+    public ReceivedResource(){};
 
-
-    public Resource(long resourceId, Date pubDate, Date endDate, String title, String body,
-                    String mime, String path2image) {
+    public ReceivedResource(long resourceId, Date pubDate, Date endDate, String title, String body,
+                            String mime, byte[] image) {
         this.resourceId = resourceId;
         this.pubDate = pubDate;
         this.endDate = endDate;
         this.title = title;
         this.body = body;
         this.mime = mime;
-        this.path2image = path2image;
+        this.image = image;
     }
 
 
@@ -36,6 +35,16 @@ public class Resource {
 
     public void setResourceId(long resourceId) {
         this.resourceId = resourceId;
+    }
+
+
+    public Date getPublishingDate() {
+        return pubDate;
+    }
+
+
+    public void setPublishingDate(Date publishingDate) {
+        this.pubDate = publishingDate;
     }
 
 
@@ -86,13 +95,12 @@ public class Resource {
         this.mime = mime;
     }
 
-    public String getPath2image() {
-        return path2image;
+
+    public byte[] getImage() {
+        return image;
     }
 
-    public void setPath2image(String path2image) {
-        this.path2image = path2image;
+    public void setImage(byte[] image) {
+        this.image = image;
     }
-
-
 }
