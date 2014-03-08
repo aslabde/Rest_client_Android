@@ -7,5 +7,5 @@ import android.support.v7.app.ActionBarActivity;
  */
 public class BaseBo extends ActionBarActivity {
 
-    static final String PATH_TO_SERVER = "http://192.168.1.129:8080/Rest1";
+    static final String PATH_TO_SERVER = "http://192.168.1.128:8080/Rest1";
 }

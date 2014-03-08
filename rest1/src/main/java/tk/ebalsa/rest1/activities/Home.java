@@ -74,7 +74,7 @@ public class Home extends ActionBarActivity {
         //Display welcome msg
         Toast toast = Toast.makeText(this.getApplicationContext(), "Bienvenid@ " + currentUser
                 .getName()
-                , Toast.LENGTH_LONG);
+                , Toast.LENGTH_SHORT);
         toast.setGravity(Gravity.CENTER, 0, 0);
         toast.show();
 

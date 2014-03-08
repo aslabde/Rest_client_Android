@@ -69,7 +69,16 @@ public class ResourceCaster {
         }
 
         protected Boolean doInBackground(byte[]... img) {
-            File image=new File(Environment.getExternalStorageDirectory(), path);
+            File sdCard = Environment.getExternalStorageDirectory();
+
+            File directory  = new File (sdCard.getAbsolutePath() +
+                    "/Android/data/tk.ebalsa.elrincon/"); //Faltaria añadir el username al path
+            if (!directory.exists())
+                directory.mkdirs();
+
+            File image=new File(directory, path);
+
+
 
             if (image.exists()) {
                 image.delete();
@@ -89,27 +98,6 @@ public class ResourceCaster {
         }
     }
 
-    //DELETE-----JUST FOR TESTING
-    public boolean saveImage (String path, byte[] img){
-        File image=new File(Environment.getExternalStorageDirectory(), path);
-                                //AÑADIR DIR/USER
-        if (image.exists()) {
-            image.delete();
-        }
 
-        try {
-            FileOutputStream fos=new FileOutputStream(image.getPath());
-
-            fos.write(img);
-            fos.close();
-        }
-        catch (java.io.IOException e) {
-            return false;
-        }
-
-
-
-        return true;
-    }
 
 }
