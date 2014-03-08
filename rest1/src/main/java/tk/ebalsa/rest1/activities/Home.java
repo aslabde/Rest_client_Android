@@ -143,7 +143,9 @@ public class Home extends ActionBarActivity {
 
 
         for (String u: urls){
-            resources.add(this.resourceBo.getResource(u));
+            if (this.resourceBo.getResource(u)!=null){
+                resources.add(this.resourceBo.getResource(u));
+            }
         }
 
         return resources;
@@ -199,13 +201,16 @@ public class Home extends ActionBarActivity {
         //Upate last update
         this.setLastUpdate(new Date());
 
-
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        } catch (ExecutionException e) {
-            e.printStackTrace();
-        } catch (TimeoutException e) {
-            e.printStackTrace();
+           //MODIFICAR Y PONER TOAST
+        }
+        catch (TimeoutException t){
+            toastError("Tiempo de espera agotado. Por favor inténtelo más tarde");
+        }
+        catch (ExecutionException e){
+            toastError("Vaya...algo ha fallado. Por favor intentalo más tarde de nuevo");
+        }
+        catch (Exception e){
+            toastError("Vaya...algo ha fallado. Por favor intentalo más tarde de nuevo");
         }
 
     }
@@ -343,5 +348,10 @@ public class Home extends ActionBarActivity {
 
     }
 
+    protected void toastError (String err){
+        Toast toast = Toast.makeText(this.getApplicationContext(), err, Toast.LENGTH_LONG);
+        toast.setGravity(Gravity.CENTER, 0, 0);
+        toast.show();
 
+    }
 }

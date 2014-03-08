@@ -21,13 +21,13 @@ public class DBCache {
     static final String PATH_2_IMG= "path2image";
     static final String USER_ACTIVE = "userActive";
     static final String DATABASE_NAME = "local_cache";
-    static final int DATABASE_VERSION = 1;
+    static final int DATABASE_VERSION = 3;
     static final String TAG = "DBCache";
     static final String DATABASE_TABLE = "resources";
     static final String DATABASE_CREATE =
     " create table resources (id integer not null, title text, body text " +
             ",pubDate integer, endDate integer, userActive text not null, " +
-            "mime text, path2image text " +
+            "mime text, path2image text, " +
             "PRIMARY KEY(id, userActive))";
 
     final Context context;
